@@ -28,19 +28,22 @@ The dataset is stored in a comma-separated-value (CSV) file and there are a tota
 
 Setting global option that makes all my code visible (the other options turn off package loading messages and warnings):
 
-
+```{r}
+    
     ## Load the knitr library:
     require(knitr)
     ## Loading required package: 
 
     opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
+```
 The assignment instructions contain the following note:
 
 _The GitHub repository also contains the dataset for the assignment so you do not have to download the data separately._
 
 Started unziped csv file by reading from it:
 
+```{r}
 
     activity <- read.csv("activity.csv")
     head(activity)
@@ -61,11 +64,11 @@ Started unziped csv file by reading from it:
     ##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
     
-
+``` 
 
 Transformed the data in the "date":
 
-
+```{r}
 
     activity <- transform(activity, date = as.Date(date))
     str(activity)
@@ -74,7 +77,8 @@ Transformed the data in the "date":
     ##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
     ##  $ date    : Date, format: "2012-10-01" "2012-10-01" ...
     ##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
-
+    
+``` 
 
 
 ## What is mean total number of steps taken per day?
@@ -83,37 +87,37 @@ The assignment says: _For this part of the assignment, you can ignore the missin
 
 Created a new data frame with the `NA` values removed:
 
-
+```{r}
 
     activity.NoNAs <- activity[complete.cases(activity),]
     
-
+```
 
 The total number of steps taken per day is calculated as:
 
-
+```{r}
 
     totalStepsPerDay <- aggregate(steps ~ date, activity.NoNAs, sum)
 
-
+```
 
 1.  Histogram of the total number of steps taken per day:
 
  
-
+ ```{r}
     require(ggplot2)
     g <- ggplot(totalStepsPerDay, aes(x=steps)) +
       geom_histogram(alpha=0.5, fill="red", binwidth=1000,position='identity') +
       ylab("Frequency") + xlab("Total number of steps per day") +
       ggtitle("Histogram of the total number of steps taken per day")
     g
+    
+ ```
 
- 
-![Histogram of the total number of steps taken per day plot:](/figure/histogram.png)
 
 1.  Mean and median total number of steps taken per day:
 
-
+```{r}
 
     mean(totalStepsPerDay$steps)
 
@@ -123,23 +127,23 @@ The total number of steps taken per day is calculated as:
 
     ## [1] 10765
     
-
+``` 
 
 ## What is the average daily activity pattern?
 
 The average number of steps taken per interval, averaged across all days, is calculated thus:
 
-
+```{r}
 
     averageStepsPerInterval <- aggregate(steps ~ interval, activity, mean)
     
-
+```
 
 (Note: `NA` values have not been removed, as there no indication in the assignment instructions that this is required.)
 
 Having noticed that the "interval" column is simply a 24-hour clock representation of the time when the measurements were taken, we can optionally transform the data in the "interval" column into times:
 
-
+```{r}
 
     # Firstly, transform the interval data (integers) into characters padded with leading zeros as needed:
     averageStepsPerInterval$time <- formatC(averageStepsPerInterval$interval, width = 4, format = "d", flag = "0")
@@ -151,12 +155,13 @@ Having noticed that the "interval" column is simply a 24-hour clock representati
     ##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
     ##  $ steps   : num  1.717 0.3396 0.1321 0.1509 0.0755 ...
     ##  $ time    : POSIXlt, format: "2014-11-14 00:00:00" "2014-11-14 00:05:00" ...
-
+    
+```
 Incorrect, date won't be using it to construct the plot.
 
 1.  A time series plot of the average number of steps taken, averaged over all days, versus the 5-minute interval:
 
-
+```{r}
 
     # We'll need the following library for handling times:
     require(scales)
@@ -171,64 +176,67 @@ Incorrect, date won't be using it to construct the plot.
         )), color = "red", linetype = "dashed")
     g
     
- 
-![A time series plot of the average number of steps versus the 5-minute interval plot:](/figure/averagestep.png)
+```  
 
 1.  The 5-minute interval, on average across all the days in the dataset, containing the maximum number of steps is calculated thus:
 
+```{r}
 
     maxStepsInterval <- averageStepsPerInterval[which.max(averageStepsPerInterval$steps), "interval"]
     maxStepsInterval
 
     ## [1] 835
     
-
+```
 This interval is indicated with the red vertical dashed line on the previous plot. This value is expressed as an integer count of the number of minutes since the start of the day. We can, instead, express this value as a time:
 
-
+```{r}
 
     maxStepsInterval <- averageStepsPerInterval[which.max(averageStepsPerInterval$steps), "time"]
     format(maxStepsInterval, "%H:%M")
 
     ## [1] "08:35"
     
-
+```
 
 
 ## Imputing missing values
 
 1.  The total number of rows with `NA` values:
 
-
+```{r}
 
     sum(is.na(activity))
 
     ## [1] 2304
-
+    
+```
 1.  To impute values, we're going to use the number of steps taken per interval, averaged over all days:
 
+    ```{r}
     # Calculate the number of steps per interval averaged over all days; this is the replacement data:
     replacements <- aggregate(steps ~ interval, activity, mean, na.action = na.omit)$steps
+```
 
 1.  Create a new dataset that is equal to the original dataset but with the missing data filled in:
 
-
+```{r}
 
     activity.imputed <- transform(activity, steps = ifelse(is.na(activity$steps), replacements, activity$steps))
     
-
+```
 
 How many `NA` values are in the imputed data?
 
-
+```{r}
 
     sum(is.na(activity.imputed))
 
     ## [1] 0
-
+```
 Inspect the data, recalling that the first few rows of the data previously held `NA` values:
 
-
+```{r}
 
     head(activity.imputed)
 
@@ -240,33 +248,32 @@ Inspect the data, recalling that the first few rows of the data previously held 
     ## 5 0.07547 2012-10-01       20
     ## 6 2.09434 2012-10-01       25
     
-
+```
 1.  Calculate the total number of steps taken per day with our new data frame:
 
-
+```{r}
     totalStepsPerDay.imputed <- aggregate(steps ~ date, activity.imputed, sum)
-
+```
 
 Histogram of the total number of steps taken per day:
 
-
+```{r}
     g <- ggplot(totalStepsPerDay.imputed, aes(x=steps)) +
       geom_histogram(alpha=0.5, fill="skyblue", binwidth=1000,position='identity') +
       ylab("Frequency") + xlab("Total number of steps per day") +
       ggtitle("Histogram of the total number of steps taken per day")
     g
-
+```
  
-![Histogram of the total number of steps taken per day plot:](/figure/histtotalsteptaken.png)
 
 Mean and median total number of steps taken per day:
 
-
+```{r}
     mean(totalStepsPerDay.imputed$steps)
     ## [1] 10766
     median(totalStepsPerDay.imputed$steps)
     ## [1] 10766
-
+```
 
 We see that:
 
@@ -278,16 +285,15 @@ We see that:
 
 If on the same axes we plot the histograms of the total number of steps taken per day for both the imputed and the non-imputed data, we see that the effect of imputing `NA` values is to increase the number of entries in the centre of the range (red = original data, blue = imputed data; mauve = red + blue, with transparency).
 
-
+```{r}
     g <- ggplot(totalStepsPerDay, aes(x=steps)) +
       geom_histogram(data = totalStepsPerDay, alpha=0.5, fill="red", binwidth=1000,position='identity') +
       geom_histogram(data = totalStepsPerDay.imputed, alpha=0.5, fill="skyblue", binwidth=1000,position='identity') +
       ylab("Frequency") + xlab("Total number of steps per day") +
       ggtitle("Histogram of the total number of steps taken per day")
     g
-  
+```  
 
-![Histograms of the total number of steps taken per day plot:](/figure/histsteptakenday.png)
 
 _The impact of imputing missing data is that the estimates of the total daily number of steps increases._
 
@@ -298,7 +304,7 @@ _The impact of imputing missing data is that the estimates of the total daily nu
 Create a new variable that is the weekday of the date, then check to see if it begins with the letter 's'; this give weekend:
 
 
-
+```{r}
     activity.imputed$day <- weekdays(activity.imputed$date)
     # Does the day begin with an 's'?
     activity.imputed$isWeekend <- grepl("^S", activity.imputed$day)
@@ -323,23 +329,23 @@ Create a new variable that is the weekday of the date, then check to see if it b
     ##  $ isWeekend: logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
     ##  $ dayType  : Factor w/ 2 levels "Weekday","Weekend": 1 1 1 1 1 1 1 1 1 1 ...
     
-
+```
 
 Average over all days, then add the timestamp and we can make time series plots:
 
-
+```{r}
     averageStepsPerInterval.imputed <- aggregate(steps ~ interval + dayType, activity.imputed, mean)
     # Firstly, transform the interval data (integers) into characters padded with leading zeros as needed:
     averageStepsPerInterval.imputed$time <- formatC(averageStepsPerInterval.imputed$interval, width = 4, format = "d", flag = "0")
     # Next, convert the character representation of the time into an actual time:
     averageStepsPerInterval.imputed$time <- strptime(averageStepsPerInterval.imputed$time, format = "%H%M")
-
+```
 
 Make the plot:
 
 
 
-
+```{r}
     g <- ggplot(averageStepsPerInterval.imputed, aes(x = time, y = steps)) +
       facet_grid(dayType ~ .) +
       geom_line(colour = "blue") +
@@ -349,8 +355,7 @@ Make the plot:
       ggtitle("Average number of steps taken versus time interval") 
     g
     
-
+```
  
-![Average over all days and time series plot:](/figure/avgsteptime.png)
 
 The plot shows that there is a clear difference between weekend and weekday activity patterns. On weekdays, this subject's average level of activity rises abruptly from rest just before 6am (alarm clock wakes up the subject?). Activity levels are then moderate (the subject is getting ready for work?) until around 8am, spiking at 8:35am (perhaps the subject is rushing to get to work on time?). Activity levels fall at around 9am. The general level of activity on a weekday from 9am until the evening is lower than for the same period of time on a weekend (perhaps this subject has a sedentary job in an office, not moving from their desk much?). On weekdays, this subject's activity levels decline earlier than on a weekend (this subject appears to go to bed earlier on a weekend). On weekends, this subject's activity levels rise from a resting state later in the day than on weekends, and the change is less abrupt (no early morning panic to get to work on time!). However, activity levels are generally higher throughout the day than on a weekday (the subject engages in leisure activities?).
