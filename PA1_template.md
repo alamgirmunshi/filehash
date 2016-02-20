@@ -114,7 +114,7 @@ The total number of steps taken per day is calculated as:
     
  ```
  
-[Histogram of the total number of steps taken per day plot:](/blob/master/figure/histogram.png)
+![Histogram of the total number of steps taken per day plot:](/figure/histogram.png)
 
 1.  Mean and median total number of steps taken per day:
 
@@ -178,7 +178,7 @@ Incorrect, date won't be using it to construct the plot.
     g
     
 ```  
-[A time series plot of the average number of steps versus the 5-minute interval plot:](/blob/master/figure/averagestep.png)
+![A time series plot of the average number of steps versus the 5-minute interval plot:](/figure/averagestep.png)
 
 1.  The 5-minute interval, on average across all the days in the dataset, containing the maximum number of steps is calculated thus:
 
@@ -265,7 +265,7 @@ Histogram of the total number of steps taken per day:
     g
 ```
  
-[Histogram of the total number of steps taken per day plot:](/blob/master/figure/histtotalsteptaken.png)
+![Histogram of the total number of steps taken per day plot:](/figure/histtotalsteptaken.png)
 
 Mean and median total number of steps taken per day:
 
@@ -295,7 +295,7 @@ If on the same axes we plot the histograms of the total number of steps taken pe
     g
 ```  
 
-[Histograms of the total number of steps taken per day plot:](/blob/master/figure/histsteptakenday.png)
+![Histograms of the total number of steps taken per day plot:](/figure/histsteptakenday.png)
 
 _The impact of imputing missing data is that the estimates of the total daily number of steps increases._
 
@@ -359,6 +359,6 @@ Make the plot:
     
 ```
  
-[Average over all days and time series plot:](/blob/master/figure/avgsteptime.png)
+![Average over all days and time series plot:](/blob/figure/avgsteptime.png)
 
 The plot shows that there is a clear difference between weekend and weekday activity patterns. On weekdays, this subject's average level of activity rises abruptly from rest just before 6am (alarm clock wakes up the subject?). Activity levels are then moderate (the subject is getting ready for work?) until around 8am, spiking at 8:35am (perhaps the subject is rushing to get to work on time?). Activity levels fall at around 9am. The general level of activity on a weekday from 9am until the evening is lower than for the same period of time on a weekend (perhaps this subject has a sedentary job in an office, not moving from their desk much?). On weekdays, this subject's activity levels decline earlier than on a weekend (this subject appears to go to bed earlier on a weekend). On weekends, this subject's activity levels rise from a resting state later in the day than on weekends, and the change is less abrupt (no early morning panic to get to work on time!). However, activity levels are generally higher throughout the day than on a weekday (the subject engages in leisure activities?). 
